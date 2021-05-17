@@ -82,19 +82,16 @@
 			this.messageAnchor = [40,130];
 			this._text = "Hi!";
 
-			this.init();
+			this.node.style.position = "fixed";
+			this.node.style.right = "0px";
+			this.node.style.bottom = "0px";
+
 			this.addImage();
 			this.addMessage();
 		}
 
-		init() {
-			this.node.style.position = "fixed";
-			this.node.style.right = "0px";
-			this.node.style.bottom = "0px";
-		}
-
 		addImage() {
-			var _this = this; // переменная нужна, чтобы пробиться в контекст onload-функции ниже
+			var _this = this;
 			var img = new Image();
 			img.src = "cow.png";
 
