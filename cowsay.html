@@ -1,0 +1,140 @@
+<meta charset="utf-8">
+
+<form id="controls">
+	<p>Что сказать коровке?</p>
+	<input type="text" name="message">
+	<button action="setMessage">say</button>
+</form>
+
+
+<div id="cow"></div>
+
+<style type="text/css">
+	/*
+		PAGE STYLES
+	*/
+	body {
+		font-family: "Arial Black", Gadget, sans-serif;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 0px;
+		margin: 0px;
+		width: 100%;
+		height: 100vh;
+	}
+	#controls {
+		display: flex;
+		flex-direction: column;
+		padding: 10px;
+		border-radius: 4px;
+		background-color: #f2f2f2;
+	}
+	#controls * {
+		margin: 3px;
+	}
+	/*
+		COWSAY CLASS STYLES
+	*/
+	.cowmessage {
+		position: absolute;
+		width: 0px;
+		height: 0px;
+		border: solid 15px;
+		border-color: #424242 #424242 transparent transparent;
+	}
+	.cowmessage:before {
+		content: attr(text);
+		position: absolute;
+		padding: 10px 20px;
+		background-color: white;
+		bottom: 15px;
+		right: -17px;
+		border-radius: 4px;
+		border: solid 7px #424242;
+	}
+	.cowmessage:after {
+		content: "";
+		position: absolute;
+		width: 0px;
+		height: 0px;
+		border: solid 10px;
+		border-color: white white transparent transparent;
+		bottom: 3px;
+		right: -9px;
+	}
+</style>
+
+<script type="text/javascript">
+	class cowsay_class {
+		set text(value) {
+			this._text = value;
+			this.node
+				.querySelector(".cowmessage")
+				.setAttribute("text", this._text);
+		}
+		get text() {
+			return this._text;
+		}
+		constructor(node) {
+			this.node = node;
+			this.messageAnchor = [40,130];
+			this._text = "Hi!";
+
+			this.init();
+			this.addImage();
+			this.addMessage();
+		}
+
+		init() {
+			this.node.style.position = "fixed";
+			this.node.style.right = "0px";
+			this.node.style.bottom = "0px";
+		}
+
+		addImage() {
+			var _this = this; // переменная нужна, чтобы пробиться в контекст onload-функции ниже
+			var img = new Image();
+			img.src = "cow.png";
+
+			img.onload = function () {
+				img.style.width = "250px";
+				_this.node.appendChild(img);
+			}
+		}
+
+		addMessage() {
+			let div = document.createElement("div");
+			div.className = "cowmessage";
+
+			div.style.left = this.messageAnchor[0];
+			div.style.top  = this.messageAnchor[1];
+
+			div.setAttribute("text", this.text);
+
+			this.node.appendChild(div);
+		}
+
+		cowsay(message) {
+			this.text = message;
+		}
+	}
+
+	var cowsay_object = new cowsay_class(document.querySelector("#cow"));
+
+	document
+		.querySelector("button[action=setMessage]")
+		.addEventListener("click", (ev)=>{
+		let input = document.querySelector("input[name=message]");
+
+		cowsay_object.cowsay(input.value);
+		input.value = "";
+	})
+
+	document
+		.querySelector("form#controls")
+		.addEventListener("submit", (ev)=>{
+			ev.preventDefault();
+		})
+</script>
